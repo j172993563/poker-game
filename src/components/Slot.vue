@@ -38,7 +38,6 @@ export default {
 <style>
 .slot-box-outer {
   padding: 5px;
-  width: 100%;
   box-sizing: border-box;
   background-color: brown;
 }
@@ -48,15 +47,16 @@ export default {
 }
 .slot-box-inner {
   padding: 2px;
-  height: 66px;
+  width: 100vw;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 .shadow-card {
   width: 50px;
   height: 60px;
   border-radius: 5px;
   border: 1px dotted #fff;
-  margin: 0 5px;
+  margin: 5px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div style="min-width: 1260px">
+  <div class="container">
     <div class="main">
       <div class="score-bord">
         <p>规则：{{ rules.vanishCount }}张相同的牌即可消除。</p>
@@ -21,7 +21,7 @@
           :disabled="rules.skill <= 0"
           @click="handleUseSkill"
         >
-          立马消除点数相同的牌（{{ rules.skill }}次）
+          消除相同牌（{{ rules.skill }}次）
         </button>
         <button v-show="isUsingSkill" @click="isUsingSkill = false">
           取消使用技能
@@ -115,6 +115,11 @@ export default {
         top: 0,
         left: 0,
       },
+      system: {
+        cardWidth: 0,
+        cardHeight: 0,
+        screenWidth: 0,
+      },
     };
   },
   computed: {
@@ -140,10 +145,17 @@ export default {
   },
   mounted() {
     this.setCardsBoxTop();
+    this.initSystemParams();
     this.setInstanceToCard();
     this.init();
   },
   methods: {
+    initSystemParams() {
+      this.system.screenWidth = document.body.clientWidth;
+      const cardDom = this.$refs["card0"][0]["$el"];
+      this.system.cardWidth = cardDom.clientWidth;
+      this.system.cardHeight = cardDom.clientHeight;
+    },
     setCardsBoxTop() {
       this.cardsBox.top = this.$refs.cards.offsetTop;
       this.cardsBox.left = this.$refs.cards.offsetLeft;
@@ -334,14 +346,28 @@ export default {
       // 初始化在场牌列表
       this.cardDatas.insertSlotList = [];
       this.cardDatas.leaveList = [];
+      this.initCardPosition();
+    },
+    initCardPosition() {
+      let lastRowCardIndex = 0;
+      let rowIndex = 0;
       for (let i = 0; i < this.cardDatas.cards.length; i++) {
         const cardInfo = this.cardDatas.cards[i];
         const card = cardInfo.inst;
         card.zIndex = i;
-        card.left = i * 25 + 10;
-        card.top = 10;
         card.isClick = false;
         card.isFinish = false;
+        // 设置位置
+        const calcLeft = (i - lastRowCardIndex) * 25 + 10;
+        const calcTop = (10 + this.system.cardHeight) * rowIndex;
+        // 如果当前计算出的left>screenWidth - 2*cardWidth
+        if (calcLeft > this.system.screenWidth - 2 * this.system.cardWidth) {
+          // 另起一行
+          lastRowCardIndex = i + 1;
+          rowIndex++;
+        }
+        card.left = calcLeft;
+        card.top = calcTop;
         // 将排好序的版重新插回数组
         this.cardDatas.leaveList.push(cardInfo);
       }
@@ -361,8 +387,14 @@ export default {
 };
 </script>
 <style>
+.container {
+  min-width: 1260px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .main {
-  height: calc(100vh - 84px);
+  flex: 1;
   padding: 10px;
   box-sizing: border-box;
 }
