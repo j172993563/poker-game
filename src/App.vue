@@ -144,7 +144,7 @@ export default {
     },
   },
   mounted() {
-    this.setCardsBoxTop();
+    this.setCardsBoxPosition();
     this.initSystemParams();
     this.setInstanceToCard();
     this.init();
@@ -156,7 +156,7 @@ export default {
       this.system.cardWidth = cardDom.clientWidth;
       this.system.cardHeight = cardDom.clientHeight;
     },
-    setCardsBoxTop() {
+    setCardsBoxPosition() {
       this.cardsBox.top = this.$refs.cards.offsetTop;
       this.cardsBox.left = this.$refs.cards.offsetLeft;
     },
@@ -359,7 +359,7 @@ export default {
         card.isFinish = false;
         // 设置位置
         const calcLeft = (i - lastRowCardIndex) * 25 + 10;
-        const calcTop = (10 + this.system.cardHeight) * rowIndex;
+        const calcTop = (this.system.cardHeight / 2) * rowIndex;
         // 如果当前计算出的left>screenWidth - 2*cardWidth
         if (calcLeft > this.system.screenWidth - 2 * this.system.cardWidth) {
           // 另起一行
