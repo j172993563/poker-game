@@ -1,6 +1,5 @@
 export default {
   base: "/poker-game",
-  build: {
-    outDir: "docs",
-  },
+  assetsDir: "assets",
+  outDir: "docs",
 };
