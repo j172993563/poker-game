@@ -351,26 +351,30 @@ export default {
     initCardPosition() {
       let lastRowCardIndex = 0;
       let rowIndex = 0;
-      for (let i = 0; i < this.cardDatas.cards.length; i++) {
-        const cardInfo = this.cardDatas.cards[i];
-        const card = cardInfo.inst;
-        card.zIndex = i;
-        card.isClick = false;
-        card.isFinish = false;
-        // 设置位置
-        const calcLeft = (i - lastRowCardIndex) * 25 + 10;
-        const calcTop = (this.system.cardHeight / 2) * rowIndex;
-        // 如果当前计算出的left>screenWidth - 2*cardWidth
-        if (calcLeft > this.system.screenWidth - 2 * this.system.cardWidth) {
-          // 另起一行
-          lastRowCardIndex = i + 1;
-          rowIndex++;
+
+      // 以防未渲染，延迟一秒再计算
+      setTimeout(() => {
+        for (let i = 0; i < this.cardDatas.cards.length; i++) {
+          const cardInfo = this.cardDatas.cards[i];
+          const card = cardInfo.inst;
+          card.zIndex = i;
+          card.isClick = false;
+          card.isFinish = false;
+          // 设置位置
+          const calcLeft = (i - lastRowCardIndex) * 25 + 10;
+          const calcTop = (this.system.cardHeight / 2) * rowIndex;
+          // 如果当前计算出的left>screenWidth - 2*cardWidth
+          if (calcLeft > this.system.screenWidth - 2 * this.system.cardWidth) {
+            // 另起一行
+            lastRowCardIndex = i + 1;
+            rowIndex++;
+          }
+          card.left = calcLeft;
+          card.top = calcTop;
+          // 将排好序的版重新插回数组
+          this.cardDatas.leaveList.push(cardInfo);
         }
-        card.left = calcLeft;
-        card.top = calcTop;
-        // 将排好序的版重新插回数组
-        this.cardDatas.leaveList.push(cardInfo);
-      }
+      }, 1000);
     },
     initSlot() {
       // 将指针置0

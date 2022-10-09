@@ -25,12 +25,15 @@ export default {
   },
   methods: {
     setCardPosition() {
-      for (let i = 0; i < this.cardCount; i++) {
-        const dom = this.$refs["shadow" + (i + 1)][0];
-        const top = dom.offsetTop - 1;
-        const left = dom.offsetLeft - 1;
-        this.cardPosition.push({ top, left });
-      }
+      // 以防未渲染，延迟一秒再计算
+      setTimeout(() => {
+        for (let i = 0; i < this.cardCount; i++) {
+          const dom = this.$refs["shadow" + (i + 1)][0];
+          const top = dom.offsetTop - 1;
+          const left = dom.offsetLeft - 1;
+          this.cardPosition.push({ top, left });
+        }
+      }, 1000);
     },
   },
 };
