@@ -296,6 +296,8 @@ export default {
       this.isAnimation = false;
       this.isRandom = false;
       this.rules.skill = 4;
+      // 取消使用技能
+      this.isUsingSkill = false;
       // 初始化牌
       this.initCard();
       // 初始化插槽
