@@ -154,7 +154,7 @@ export default {
     },
     allRandom() {
       const leave = this.slot.cardCount - this.slot.currentIndex;
-      if (leave <= 1 || this.isWin) return (this.isRandom = false);
+      if (leave <= 1 || this.isFinish) return (this.isRandom = false);
       this.handleRandomClick();
       setTimeout(() => {
         // 如果不是正在随机，则不再执行
@@ -164,9 +164,15 @@ export default {
       }, 200 + this.animationTime);
     },
     handleRandomClick() {
+      // 已经结束游戏就直接退出
+      if (this.isFinish) return;
+      // 取消使用技能
+      this.isUsingSkill = false;
       const { leaveList } = this.cardDatas;
+      // 随机一个数字
       const currentIndex = Math.floor(Math.random() * leaveList.length);
       const currentCard = leaveList[currentIndex];
+      // 判断是否已经被点击或者不存在，是则再次运行
       if (!currentCard || (currentCard && currentCard.inst.isClick)) {
         this.handleRandomClick();
       } else {
